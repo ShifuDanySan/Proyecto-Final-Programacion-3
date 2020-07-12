@@ -158,6 +158,7 @@ public class Archivo_De_Libros {
 						escribir.println(datos);
 			
 					}
+					datos="";
 		
 				}
 				escribir.close();
@@ -165,9 +166,8 @@ public class Archivo_De_Libros {
 				
 				File archivo = new File(direccion);//eliminado archivo
 				archivo.delete();
-				
+			
 				archivoAux.renameTo(new File("Libros.txt"));//Cambiando nombre
-				
 				
 			}catch(IOException e) {
 				e.printStackTrace();

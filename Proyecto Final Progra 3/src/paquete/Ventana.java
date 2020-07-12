@@ -346,7 +346,7 @@ public class Ventana {
 						prestamos.escribeArchivo(datosPrestamos);
 						JOptionPane.showMessageDialog(null, "El prestamo sea registrado");
 						
-						libros.eliminarLibro("4444");
+					   libros.eliminarLibro("4444");
 						
 				
 					}else {
@@ -531,7 +531,18 @@ public class Ventana {
 		panelBorrarDatosLibro.add(textIsbnEliminar);
 		textIsbnEliminar.setColumns(10);
 		
-		JButton btnEliminar = new JButton("Eliminar libro");
+		btnEliminar = new JButton("Eliminar libro");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String isbnEliminar = "";
+				isbnEliminar+=textIsbnEliminar.getText();
+				libros.eliminarLibro(isbnEliminar);
+				
+				
+				
+			}
+		});
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnEliminar.setBounds(66, 214, 119, 35);
 		panelBorrarDatosLibro.add(btnEliminar);
@@ -548,15 +559,15 @@ public class Ventana {
 	JPanel panelGestionLibros;
 	JPanel panelPrestamos;
 	
+	
+	private JButton btnEliminar;
 	private String usuarioIngresado = "";
 	private String contrasenaIngresada = "";
 	private JTextField cajaTextoUsuario;
 	private JPasswordField passwordUsuario;
 	private JButton btnConfirmarPrestamo;
 	private Archivo usuariosPermitidos = new Archivo("Usuarios Permitidos.txt");
-	
 	private Archivo_De_Libros libros = new Archivo_De_Libros("Libros.txt");
-	
 	private Archivo_De_Prestamos prestamos = new Archivo_De_Prestamos ("Prestamos.txt");
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_5;
