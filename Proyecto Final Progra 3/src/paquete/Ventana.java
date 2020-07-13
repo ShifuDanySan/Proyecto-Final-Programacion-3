@@ -1,10 +1,11 @@
 package paquete;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,19 +13,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-
-import javax.swing.JPasswordField;
-import java.awt.Color;
-import java.awt.Font;
 
 public class Ventana {
 
 	private JFrame frame;
 
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -42,6 +40,16 @@ public class Ventana {
 	}
 
 	private void initialize() {
+		usuariosPermitidos = new Archivo("Usuarios Permitidos.txt");
+		libros = new Archivo("Libros.txt");
+
+		// guardamos los datos del archivo libros.txt en un ArrayList (uno de los
+		// atributos de la clase Archivo)
+		libros.guardarDatosDeLibros();
+
+		prestamos = new Archivo("Prestamos.txt");
+		devoluciones = new Archivo("Devoluciones.txt");
+		alumnosPermitidos = new Archivo("Alumnos Permitidos.txt");
 
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -100,7 +108,7 @@ public class Ventana {
 				 * contraseña que ingresamos coincide con los datos de los usuarios del archivo
 				 * de texto(que son los autorizados para gestionar la biblioteca)
 				 */
-                
+
 				if (usuariosPermitidos.esUsuarioPermitido(usuarioIngresado, contrasenaIngresada) == true) {
 					panel_Ingresar.setVisible(false);
 					panel_Bienvenida.setVisible(true);
@@ -279,107 +287,101 @@ public class Ventana {
 		});
 		botonVolverDePrestamo.setBounds(659, 381, 89, 23);
 		panelPrestamos.add(botonVolverDePrestamo);
-		
+
 		JLabel lblISBN = new JLabel("ISBN");
 		lblISBN.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblISBN.setBounds(52, 110, 64, 23);
 		panelPrestamos.add(lblISBN);
-		
+
 		textISBN = new JTextField();
 		textISBN.setBounds(133, 114, 86, 20);
 		panelPrestamos.add(textISBN);
 		textISBN.setColumns(10);
-		
+
 		JLabel lblNewLabel_14 = new JLabel("Datos del alumno:");
 		lblNewLabel_14.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblNewLabel_14.setBounds(52, 144, 167, 48);
 		panelPrestamos.add(lblNewLabel_14);
-		
+
 		JLabel lblNombreAlumno = new JLabel("Nombre");
 		lblNombreAlumno.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblNombreAlumno.setBounds(52, 203, 64, 30);
 		panelPrestamos.add(lblNombreAlumno);
-		
+
 		textNombreAlumno = new JTextField();
 		textNombreAlumno.setBounds(133, 210, 86, 20);
 		panelPrestamos.add(textNombreAlumno);
 		textNombreAlumno.setColumns(10);
-		
+
 		JLabel lblApellido = new JLabel("Apellido");
 		lblApellido.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblApellido.setBounds(52, 244, 64, 30);
 		panelPrestamos.add(lblApellido);
-		
+
 		textApellidoAlumno = new JTextField();
 		textApellidoAlumno.setBounds(133, 251, 86, 20);
 		panelPrestamos.add(textApellidoAlumno);
 		textApellidoAlumno.setColumns(10);
-		
+
 		textDniAlumno = new JTextField();
 		textDniAlumno.setBounds(133, 305, 86, 20);
 		panelPrestamos.add(textDniAlumno);
 		textDniAlumno.setColumns(10);
-		
-	    btnConfirmarPrestamo = new JButton("Confirmar Prestamo");
-	    btnConfirmarPrestamo.setFont(new Font("Tahoma", Font.PLAIN, 13));
+
+		btnConfirmarPrestamo = new JButton("Confirmar Prestamo");
+		btnConfirmarPrestamo.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnConfirmarPrestamo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				String isbn = textISBN.getText();
 				String nombreAlumno = textNombreAlumno.getText();
 				String apellidoAlumno = textApellidoAlumno.getText();
 				String dniAlumno = textDniAlumno.getText();
 				String fechaRetiro = textFechaRetiro.getText();
-			
-				
+
 				libros.guardarDatosDeLibros();
-				
-				if(libros.dimeSiEstaLibro(isbn)==true) {
-					String datosLibros[] = libros.dameDatosDeLibro(isbn);
+
+				if (libros.estaLibro(isbn) == true) {
+					String datosLibros[] = libros.devolverDatosDeLibro(isbn);
 					int cantLibros = Integer.parseInt(datosLibros[2]);
-				    
-					if(cantLibros>0) {
-						
-						String datosPrestamos="";
-						datosPrestamos+=nombreAlumno+" "+apellidoAlumno+" "+dniAlumno+" "+fechaRetiro+" "+isbn+" "+datosLibros[0]+" "+datosLibros[1];
-						
+
+					if (cantLibros > 0) {
+
+						String datosPrestamos = "";
+						datosPrestamos += nombreAlumno + " " + apellidoAlumno + " " + dniAlumno + " " + fechaRetiro
+								+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
+
 						prestamos.escribeArchivo(datosPrestamos);
 						JOptionPane.showMessageDialog(null, "El prestamo sea registrado");
-						
-					   libros.eliminarLibro("4444");
-						
-				
-					}else {
+
+						libros.eliminarLibro("4444");
+
+					} else {
 						JOptionPane.showMessageDialog(null, "Ya no hay suficientes libros");
 					}
-					
-					
-					
-					
-				}else {
-					JOptionPane.showMessageDialog(null, "No se encuentra registrado el libro solicitado");	
+
+				} else {
+					JOptionPane.showMessageDialog(null, "No se encuentra registrado el libro solicitado");
 				}
 			}
 		});
 		btnConfirmarPrestamo.setBounds(52, 365, 149, 23);
 		panelPrestamos.add(btnConfirmarPrestamo);
-		
+
 		lblFechaRetiro = new JLabel("Fecha de retiro");
 		lblFechaRetiro.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblFechaRetiro.setBounds(391, 102, 136, 40);
 		panelPrestamos.add(lblFechaRetiro);
-		
+
 		textFechaRetiro = new JTextField();
 		textFechaRetiro.setBounds(555, 114, 86, 20);
 		panelPrestamos.add(textFechaRetiro);
 		textFechaRetiro.setColumns(10);
-		
+
 		JLabel lblDniAlumno = new JLabel("DNI");
 		lblDniAlumno.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblDniAlumno.setBounds(52, 301, 64, 23);
 		panelPrestamos.add(lblDniAlumno);
-		
-		
 
 		panelDevoluciones = new JPanel();
 		panelGestionarLibros.add(panelDevoluciones, "name_1226451858893587");
@@ -400,37 +402,37 @@ public class Ventana {
 		});
 		botonVolverDeDevoluciones.setBounds(680, 399, 89, 23);
 		panelDevoluciones.add(botonVolverDeDevoluciones);
-		
+
 		lblIsbnDevuelto = new JLabel("ISBN");
 		lblIsbnDevuelto.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblIsbnDevuelto.setBounds(55, 113, 75, 23);
 		panelDevoluciones.add(lblIsbnDevuelto);
-		
+
 		textIsbn = new JTextField();
 		textIsbn.setBounds(132, 116, 86, 20);
 		panelDevoluciones.add(textIsbn);
 		textIsbn.setColumns(10);
-		
+
 		lblDni = new JLabel("Dni de Alumno");
 		lblDni.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDni.setBounds(46, 187, 113, 34);
 		panelDevoluciones.add(lblDni);
-		
+
 		textDni = new JTextField();
 		textDni.setBounds(168, 196, 86, 20);
 		panelDevoluciones.add(textDni);
 		textDni.setColumns(10);
-		
+
 		lblFechaDevolucion = new JLabel("Fecha de devolucion");
 		lblFechaDevolucion.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblFechaDevolucion.setBounds(46, 249, 151, 34);
 		panelDevoluciones.add(lblFechaDevolucion);
-		
+
 		textField = new JTextField();
 		textField.setBounds(223, 258, 86, 20);
 		panelDevoluciones.add(textField);
 		textField.setColumns(10);
-		
+
 		JButton btnConfirmarDevolucion = new JButton("Confirmar Devolucion");
 		btnConfirmarDevolucion.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnConfirmarDevolucion.setBounds(41, 350, 156, 34);
@@ -455,48 +457,48 @@ public class Ventana {
 		});
 		btnNewButton_4.setBounds(680, 399, 89, 23);
 		panelIngresarNuevosLibros.add(btnNewButton_4);
-		
+
 		JLabel lblIsbnNuevo = new JLabel("ISBN");
 		lblIsbnNuevo.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblIsbnNuevo.setBounds(57, 108, 64, 17);
 		panelIngresarNuevosLibros.add(lblIsbnNuevo);
-		
+
 		textIsbnNuevo = new JTextField();
 		textIsbnNuevo.setBounds(119, 108, 86, 20);
 		panelIngresarNuevosLibros.add(textIsbnNuevo);
 		textIsbnNuevo.setColumns(10);
-		
+
 		JLabel lblTituloNuevo = new JLabel("Titulo");
 		lblTituloNuevo.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblTituloNuevo.setBounds(57, 163, 64, 23);
 		panelIngresarNuevosLibros.add(lblTituloNuevo);
-		
+
 		textTituloNuevo = new JTextField();
 		textTituloNuevo.setBounds(119, 166, 86, 20);
 		panelIngresarNuevosLibros.add(textTituloNuevo);
 		textTituloNuevo.setColumns(10);
-		
+
 		JLabel lblAutorNuevo = new JLabel("Autor");
 		lblAutorNuevo.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblAutorNuevo.setBounds(57, 233, 64, 23);
 		panelIngresarNuevosLibros.add(lblAutorNuevo);
-		
+
 		textAutorNuevo = new JTextField();
 		textAutorNuevo.setBounds(119, 236, 86, 20);
 		panelIngresarNuevosLibros.add(textAutorNuevo);
 		textAutorNuevo.setColumns(10);
-		
+
 		JLabel lblCantidadDeNuevoLibro = new JLabel("Cantidad");
 		lblCantidadDeNuevoLibro.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblCantidadDeNuevoLibro.setBounds(57, 300, 75, 23);
 		panelIngresarNuevosLibros.add(lblCantidadDeNuevoLibro);
-		
+
 		textCantidadDeNuevoLibro = new JTextField();
 		textCantidadDeNuevoLibro.setBounds(134, 303, 86, 20);
 		panelIngresarNuevosLibros.add(textCantidadDeNuevoLibro);
 		textCantidadDeNuevoLibro.setColumns(10);
-		
-		JButton btnGuardarLibro = new JButton("Guardar libro");
+
+		btnGuardarLibro = new JButton("Guardar libro");
 		btnGuardarLibro.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnGuardarLibro.setBounds(57, 358, 121, 32);
 		panelIngresarNuevosLibros.add(btnGuardarLibro);
@@ -520,27 +522,28 @@ public class Ventana {
 		});
 		btnNewButton_5.setBounds(680, 399, 89, 23);
 		panelBorrarDatosLibro.add(btnNewButton_5);
-		
+
 		lblIsbnEliminar = new JLabel("ISBN");
 		lblIsbnEliminar.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblIsbnEliminar.setBounds(66, 131, 58, 23);
 		panelBorrarDatosLibro.add(lblIsbnEliminar);
-		
+
 		textIsbnEliminar = new JTextField();
 		textIsbnEliminar.setBounds(133, 134, 86, 20);
 		panelBorrarDatosLibro.add(textIsbnEliminar);
 		textIsbnEliminar.setColumns(10);
-		
+
 		btnEliminar = new JButton("Eliminar libro");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				String isbnEliminar = "";
-				isbnEliminar+=textIsbnEliminar.getText();
-				libros.eliminarLibro(isbnEliminar);
-				
-				
-				
+
+				ISBNIngresado = "";
+				ISBNIngresado += textIsbnEliminar.getText();
+				libros.eliminarLibro(ISBNIngresado);
+				textIsbnEliminar.setText("");
+				textIsbnEliminar.requestFocus();
+				ISBNIngresado = "";
+				JOptionPane.showMessageDialog(null, "Los datos del libro han sido correctamente borrados");
 			}
 		});
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -558,17 +561,19 @@ public class Ventana {
 	JPanel panelGestionarLibros;
 	JPanel panelGestionLibros;
 	JPanel panelPrestamos;
-	
-	
+
+	private JButton btnGuardarLibro;
 	private JButton btnEliminar;
 	private String usuarioIngresado = "";
 	private String contrasenaIngresada = "";
 	private JTextField cajaTextoUsuario;
 	private JPasswordField passwordUsuario;
 	private JButton btnConfirmarPrestamo;
-	private Archivo usuariosPermitidos = new Archivo("Usuarios Permitidos.txt");
-	private Archivo_De_Libros libros = new Archivo_De_Libros("Libros.txt");
-	private Archivo_De_Prestamos prestamos = new Archivo_De_Prestamos ("Prestamos.txt");
+	private Archivo usuariosPermitidos;
+	private Archivo libros;
+	private Archivo prestamos;
+	private Archivo devoluciones;
+	private Archivo alumnosPermitidos;
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
@@ -607,4 +612,5 @@ public class Ventana {
 	private JTextField textTituloNuevo;
 	private JTextField textAutorNuevo;
 	private JTextField textCantidadDeNuevoLibro;
+	private String ISBNIngresado = "";
 }
