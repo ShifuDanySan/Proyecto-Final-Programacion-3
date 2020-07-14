@@ -163,6 +163,7 @@ public class Archivo {
 
 	public void eliminarLibro(String isbn) {
 		// String archivoAUX = "librosAux.txt";
+		int pos;
 		if (estaLibro(isbn) == true) {
 			File archivoAux;
 			PrintWriter escribir;
@@ -177,7 +178,8 @@ public class Archivo {
 					System.out.println("No se encuentra el archivo");
 				}
 			}
-
+            int i=0;
+            pos=0;
 			if (archivoAux.exists()) {
 				try {
 					escribir = new PrintWriter(archivoAux);
@@ -188,9 +190,14 @@ public class Archivo {
 							datos += e.devolverIsbn() + "\r\n" + e.devolverTitulo() + "\r\n" + e.devolverAutor()
 									+ "\r\n" + e.devolverCantidadDeLibros() + "\r\n";
 							escribir.println(datos);
+							i++;
+						}else {
+							pos=i+1;
 						}
 						datos = "";
 					}
+					libros.remove(pos);
+					
 					escribir.close();
 
 					File archivo = new File(direccion);// eliminado archivo
