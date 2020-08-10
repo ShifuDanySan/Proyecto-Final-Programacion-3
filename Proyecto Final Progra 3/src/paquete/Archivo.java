@@ -71,11 +71,11 @@ public class Archivo {
 		}
 	}
 
-	public int cantLineasEnArchivo() {
+	public int cantLineasEnArchivo(String direc) {
 		String bfRead;
 		int cont = 0;
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader(this.direccion));
+			BufferedReader bf = new BufferedReader(new FileReader(direc));
 			while ((bfRead = bf.readLine()) != null) {
 				cont++;
 			}
@@ -92,7 +92,7 @@ public class Archivo {
 		int cont = 0;
 		String titulo = "", autor = "", isbn = "";
 		int cant = 0, lineasARecorer;
-		lineasARecorer = cantLineasEnArchivo();
+		lineasARecorer = cantLineasEnArchivo(this.direccion);
 		lineasARecorer = lineasARecorer / 4;
 		try {
 
@@ -325,6 +325,7 @@ public class Archivo {
 				e.printStackTrace();
 			}
 		}
+
 	}
 
 	public void agregarNuevoLibro(Libro datosNuevoLibro) {

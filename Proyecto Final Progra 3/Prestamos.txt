@@ -1,2 +1,9 @@
+Dany
+San
+123456789
+01/01/2020
+pendiente
+1111
+Harry Potter y la Piedra Filosofal
+J.K.Rowlling
 
-Dany San 123456789 1/1/2020 1111 Harry Potter y la Piedra Filosofal J.K.Rowlling

@@ -347,6 +347,7 @@ public class Ventana {
 				String apellidoAlumno = textApellidoAlumno.getText();
 				String dniAlumno = textDniAlumno.getText();
 				String fechaRetiro = textFechaRetiro.getText();
+				String fechaDevolucion = "Devolucion Pendiente";
 				textISBN.setText("");
 				textNombreAlumno.setText("");
 				textApellidoAlumno.setText("");
@@ -363,9 +364,9 @@ public class Ventana {
 						if (cantLibros > 0) {
 
 							String datosPrestamos = "";
-							datosPrestamos += nombreAlumno + " " + apellidoAlumno + " " + dniAlumno + " " + fechaRetiro
-									+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
-
+							datosPrestamos += nombreAlumno + "\r\n" + apellidoAlumno + "\r\n" + dniAlumno + "\r\n"
+									+ fechaRetiro + "\r\n" + fechaDevolucion + "\r\n" + isbn + "\r\n" + datosLibros[0]
+									+ "\r\n" + datosLibros[1];
 							prestamos.escribeArchivo(datosPrestamos);
 							libros.disminuirStockLibro(isbn);
 
@@ -473,15 +474,6 @@ public class Ventana {
 				if ((isbn.equalsIgnoreCase("") == false) && (dniAlumno.equalsIgnoreCase("") == false)
 						&& (fechaDevolucion.equalsIgnoreCase("") == false)) {
 					if (libros.estaLibro(isbn) == true) {
-						// String datosLibros[] = libros.devolverDatosDeLibro(isbn);
-						// int cantLibros = Integer.parseInt(datosLibros[2]);
-						/*
-						 * String datosPrestamos = ""; datosPrestamos += nombreAlumno + " " +
-						 * apellidoAlumno + " " + dniAlumno + " " + fechaRetiro + " " + isbn + " " +
-						 * datosLibros[0] + " " + datosLibros[1];
-						 * 
-						 * prestamos.escribeArchivo(datosPrestamos);
-						 */
 						libros.aumentarStockLibro(isbn);
 
 						JOptionPane.showMessageDialog(null, "La Devolucion ha sido registrada");
