@@ -364,10 +364,11 @@ public class Ventana {
 								+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
 
 						prestamos.escribeArchivo(datosPrestamos);
-						JOptionPane.showMessageDialog(null, "El prestamo ha sido registrado");
+						libros.disminuirStockLibro(isbn);
 
+						JOptionPane.showMessageDialog(null, "El prestamo ha sido registrado");
 					} else {
-						JOptionPane.showMessageDialog(null, "Ya no hay suficientes libros");
+						JOptionPane.showMessageDialog(null, "NO hay Stock disponible para el libro solicitado");
 					}
 
 				} else {
@@ -438,12 +439,42 @@ public class Ventana {
 		lblFechaDevolucion.setBounds(46, 249, 151, 34);
 		panelDevoluciones.add(lblFechaDevolucion);
 
-		textField = new JTextField();
-		textField.setBounds(223, 258, 86, 20);
-		panelDevoluciones.add(textField);
-		textField.setColumns(10);
+		textFechaDevolucion = new JTextField();
+		textFechaDevolucion.setBounds(223, 258, 86, 20);
+		panelDevoluciones.add(textFechaDevolucion);
+		textFechaDevolucion.setColumns(10);
 
 		JButton btnConfirmarDevolucion = new JButton("Confirmar Devolucion");
+		btnConfirmarDevolucion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				String isbn = textIsbn.getText();
+				String dniAlumno = textDniAlumno.getText();
+				String fechaDevolucion = textFechaDevolucion.getText();
+				textIsbn.setText("");
+				textDniAlumno.setText("");
+				textFechaDevolucion.setText("");
+				textISBN.requestFocus();
+				if (libros.estaLibro(isbn) == true) {
+					// String datosLibros[] = libros.devolverDatosDeLibro(isbn);
+					// int cantLibros = Integer.parseInt(datosLibros[2]);
+					/*
+					 * String datosPrestamos = ""; datosPrestamos += nombreAlumno + " " +
+					 * apellidoAlumno + " " + dniAlumno + " " + fechaRetiro + " " + isbn + " " +
+					 * datosLibros[0] + " " + datosLibros[1];
+					 * 
+					 * prestamos.escribeArchivo(datosPrestamos);
+					 */
+					libros.aumentarStockLibro(isbn);
+
+					JOptionPane.showMessageDialog(null, "La Devolucion ha sido registrada");
+
+				} else {
+					JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
+				}
+
+			}
+		});
 		btnConfirmarDevolucion.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnConfirmarDevolucion.setBounds(41, 350, 156, 34);
 		panelDevoluciones.add(btnConfirmarDevolucion);
@@ -507,8 +538,40 @@ public class Ventana {
 		textCantidadDeNuevoLibro.setBounds(134, 303, 86, 20);
 		panelIngresarNuevosLibros.add(textCantidadDeNuevoLibro);
 		textCantidadDeNuevoLibro.setColumns(10);
+		textCantidadDeNuevoLibro.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				if ((int) arg0.getKeyChar() < 48 || (int) arg0.getKeyChar() > 57) {
+					arg0.consume();
+				}
+			}
+		});
 
 		btnGuardarLibro = new JButton("Guardar libro");
+		btnGuardarLibro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String isbn = textIsbnNuevo.getText();
+				String titulo = textTituloNuevo.getText();
+				String autor = textAutorNuevo.getText();
+				String cantidad = textCantidadDeNuevoLibro.getText();
+				textIsbnNuevo.setText("");
+				textTituloNuevo.setText("");
+				textAutorNuevo.setText("");
+				textCantidadDeNuevoLibro.setText("");
+				textIsbnNuevo.requestFocus();
+				if (libros.estaLibro(isbn) == false) {
+					String datosNuevoLibro = "";
+					datosNuevoLibro += isbn + "\r\n" + titulo + "\r\n" + autor + "\r\n" + cantidad;
+					libros.escribeArchivo(datosNuevoLibro);
+					Libro nuevoLibro = new Libro(isbn, titulo, autor, Integer.parseInt(cantidad));
+					libros.agregarNuevoLibro(nuevoLibro);
+					JOptionPane.showMessageDialog(null,
+							"LOS DATOS DEL NUEVO LIBRO HAN INGRESADOS CON EXITO AL SISTEMA!");
+				} else {
+					JOptionPane.showMessageDialog(null, "El libro ingresado ya se encuentra registrado en el sistema");
+				}
+			}
+		});
 		btnGuardarLibro.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnGuardarLibro.setBounds(57, 358, 121, 32);
 		panelIngresarNuevosLibros.add(btnGuardarLibro);
@@ -615,7 +678,7 @@ public class Ventana {
 	private JLabel lblDni;
 	private JTextField textDni;
 	private JLabel lblFechaDevolucion;
-	private JTextField textField;
+	private JTextField textFechaDevolucion;
 	private JTextField textIsbnNuevo;
 	private JTextField textTituloNuevo;
 	private JTextField textAutorNuevo;

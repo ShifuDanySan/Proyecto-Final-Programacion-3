@@ -17,7 +17,8 @@ public class Archivo {
 
 	public void escribeArchivo(String datos) {
 		try (FileWriter archivo = new FileWriter(this.direccion, true)) {
-			String texto = datos;
+			String texto = "";
+			texto += "\n" + datos;
 			texto += "\r\n";
 			archivo.write(texto);
 			archivo.close();// cierro el archivo
@@ -162,7 +163,6 @@ public class Archivo {
 	}
 
 	public void eliminarLibro(String isbn) {
-		// String archivoAUX = "librosAux.txt";
 		if (estaLibro(isbn) == true) {
 			File archivoAux;
 			PrintWriter escribir;
@@ -236,6 +236,99 @@ public class Archivo {
 		}
 		System.out.println(estaAlumno);
 		return estaAlumno;
+	}
+
+	void disminuirStockLibro(String isbn) {
+
+		for (Libro e : libros) {
+
+			if (e.devolverIsbn().equals(isbn) == true) {
+				e.disminuirCant();
+			}
+		}
+		File archivoAux;
+		PrintWriter escribir;
+		archivoAux = new File("archivoAux.txt");
+		String datos = "";
+		if (!archivoAux.exists()) {
+
+			try {
+				// Codigo donde pueden ocurir errores(Excepciones)
+				archivoAux.createNewFile();
+			} catch (IOException e) {
+				System.out.println("No se encuentra el archivo");
+			}
+		}
+		int i = 0;
+		if (archivoAux.exists()) {
+			try {
+				escribir = new PrintWriter(archivoAux);
+				for (Libro e : libros) {
+					datos += e.devolverIsbn() + "\r\n" + e.devolverTitulo() + "\r\n" + e.devolverAutor() + "\r\n"
+							+ e.devolverCantidadDeLibros() + "\r\n";
+					escribir.print(datos);
+					i++;
+					datos = "";
+
+				}
+				escribir.close();
+				File archivo = new File(this.direccion);// eliminado archivo
+				if (archivo.delete()) {
+					archivoAux.renameTo(new File("Libros.txt"));// Cambiando nombre
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	void aumentarStockLibro(String isbn) {
+		for (Libro e : libros) {
+
+			if (e.devolverIsbn().equals(isbn) == true) {
+				e.aumentarCant();
+			}
+		}
+		File archivoAux;
+		PrintWriter escribir;
+		archivoAux = new File("archivoAux.txt");
+		String datos = "";
+		if (!archivoAux.exists()) {
+
+			try {
+				// Codigo donde pueden ocurir errores(Excepciones)
+				archivoAux.createNewFile();
+			} catch (IOException e) {
+				System.out.println("No se encuentra el archivo");
+			}
+		}
+		int i = 0;
+		if (archivoAux.exists()) {
+			try {
+				escribir = new PrintWriter(archivoAux);
+				for (Libro e : libros) {
+					datos += e.devolverIsbn() + "\r\n" + e.devolverTitulo() + "\r\n" + e.devolverAutor() + "\r\n"
+							+ e.devolverCantidadDeLibros() + "\r\n";
+					escribir.print(datos);
+					i++;
+					datos = "";
+
+				}
+				escribir.close();
+				File archivo = new File(this.direccion);// eliminado archivo
+				if (archivo.delete()) {
+					archivoAux.renameTo(new File("Libros.txt"));// Cambiando nombre
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void agregarNuevoLibro(Libro datosNuevoLibro) {
+		libros.add(datosNuevoLibro);
 	}
 
 	private String direccion;

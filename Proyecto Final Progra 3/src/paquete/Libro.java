@@ -24,6 +24,14 @@ public class Libro {
 		return this.cant;
 	}
 
+	public void disminuirCant() {
+		this.cant = this.cant - 1;
+	}
+
+	public void aumentarCant() {
+		this.cant = this.cant + 1;
+	}
+
 	private String isbn;
 	private String titulo;
 	private String autor;
