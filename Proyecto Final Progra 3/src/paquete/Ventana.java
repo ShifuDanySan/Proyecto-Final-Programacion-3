@@ -353,26 +353,33 @@ public class Ventana {
 				textDniAlumno.setText("");
 				textFechaRetiro.setText("");
 				textISBN.requestFocus();
-				if (libros.estaLibro(isbn) == true) {
-					String datosLibros[] = libros.devolverDatosDeLibro(isbn);
-					int cantLibros = Integer.parseInt(datosLibros[2]);
+				if ((isbn.equalsIgnoreCase("") == false) && (nombreAlumno.equalsIgnoreCase("") == false)
+						&& (apellidoAlumno.equalsIgnoreCase("") == false) && (dniAlumno.equalsIgnoreCase("") == false)
+						&& (fechaRetiro.equalsIgnoreCase("") == false)) {
+					if (libros.estaLibro(isbn) == true) {
+						String datosLibros[] = libros.devolverDatosDeLibro(isbn);
+						int cantLibros = Integer.parseInt(datosLibros[2]);
 
-					if (cantLibros > 0) {
+						if (cantLibros > 0) {
 
-						String datosPrestamos = "";
-						datosPrestamos += nombreAlumno + " " + apellidoAlumno + " " + dniAlumno + " " + fechaRetiro
-								+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
+							String datosPrestamos = "";
+							datosPrestamos += nombreAlumno + " " + apellidoAlumno + " " + dniAlumno + " " + fechaRetiro
+									+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
 
-						prestamos.escribeArchivo(datosPrestamos);
-						libros.disminuirStockLibro(isbn);
+							prestamos.escribeArchivo(datosPrestamos);
+							libros.disminuirStockLibro(isbn);
 
-						JOptionPane.showMessageDialog(null, "El prestamo ha sido registrado");
+							JOptionPane.showMessageDialog(null, "El prestamo ha sido registrado");
+						} else {
+							JOptionPane.showMessageDialog(null, "NO hay Stock disponible para el libro solicitado");
+						}
+
 					} else {
-						JOptionPane.showMessageDialog(null, "NO hay Stock disponible para el libro solicitado");
+						JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
 					}
-
 				} else {
-					JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
+					JOptionPane.showMessageDialog(null,
+							"Recuerde rellenar todos los campos requeridos para acceder al prestamo");
 				}
 			}
 		});
@@ -433,6 +440,14 @@ public class Ventana {
 		textDni.setBounds(168, 196, 86, 20);
 		panelDevoluciones.add(textDni);
 		textDni.setColumns(10);
+		textDni.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				if ((int) arg0.getKeyChar() < 48 || (int) arg0.getKeyChar() > 57) {
+					arg0.consume();
+				}
+			}
+		});
 
 		lblFechaDevolucion = new JLabel("Fecha de devolucion");
 		lblFechaDevolucion.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -449,30 +464,35 @@ public class Ventana {
 			public void actionPerformed(ActionEvent arg0) {
 
 				String isbn = textIsbn.getText();
-				String dniAlumno = textDniAlumno.getText();
+				String dniAlumno = textDni.getText();
 				String fechaDevolucion = textFechaDevolucion.getText();
 				textIsbn.setText("");
-				textDniAlumno.setText("");
+				textDni.setText("");
 				textFechaDevolucion.setText("");
-				textISBN.requestFocus();
-				if (libros.estaLibro(isbn) == true) {
-					// String datosLibros[] = libros.devolverDatosDeLibro(isbn);
-					// int cantLibros = Integer.parseInt(datosLibros[2]);
-					/*
-					 * String datosPrestamos = ""; datosPrestamos += nombreAlumno + " " +
-					 * apellidoAlumno + " " + dniAlumno + " " + fechaRetiro + " " + isbn + " " +
-					 * datosLibros[0] + " " + datosLibros[1];
-					 * 
-					 * prestamos.escribeArchivo(datosPrestamos);
-					 */
-					libros.aumentarStockLibro(isbn);
+				textIsbn.requestFocus();
+				if ((isbn.equalsIgnoreCase("") == false) && (dniAlumno.equalsIgnoreCase("") == false)
+						&& (fechaDevolucion.equalsIgnoreCase("") == false)) {
+					if (libros.estaLibro(isbn) == true) {
+						// String datosLibros[] = libros.devolverDatosDeLibro(isbn);
+						// int cantLibros = Integer.parseInt(datosLibros[2]);
+						/*
+						 * String datosPrestamos = ""; datosPrestamos += nombreAlumno + " " +
+						 * apellidoAlumno + " " + dniAlumno + " " + fechaRetiro + " " + isbn + " " +
+						 * datosLibros[0] + " " + datosLibros[1];
+						 * 
+						 * prestamos.escribeArchivo(datosPrestamos);
+						 */
+						libros.aumentarStockLibro(isbn);
 
-					JOptionPane.showMessageDialog(null, "La Devolucion ha sido registrada");
+						JOptionPane.showMessageDialog(null, "La Devolucion ha sido registrada");
 
+					} else {
+						JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
+					JOptionPane.showMessageDialog(null,
+							"Recuerde rellenar todos los campos para poder realizar la devolucion un libro");
 				}
-
 			}
 		});
 		btnConfirmarDevolucion.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -559,16 +579,23 @@ public class Ventana {
 				textAutorNuevo.setText("");
 				textCantidadDeNuevoLibro.setText("");
 				textIsbnNuevo.requestFocus();
-				if (libros.estaLibro(isbn) == false) {
-					String datosNuevoLibro = "";
-					datosNuevoLibro += isbn + "\r\n" + titulo + "\r\n" + autor + "\r\n" + cantidad;
-					libros.escribeArchivo(datosNuevoLibro);
-					Libro nuevoLibro = new Libro(isbn, titulo, autor, Integer.parseInt(cantidad));
-					libros.agregarNuevoLibro(nuevoLibro);
-					JOptionPane.showMessageDialog(null,
-							"LOS DATOS DEL NUEVO LIBRO HAN INGRESADOS CON EXITO AL SISTEMA!");
+				if ((isbn.equalsIgnoreCase("") == false) && (titulo.equalsIgnoreCase("") == false)
+						&& (autor.equalsIgnoreCase("") == false) && (cantidad.equalsIgnoreCase("") == false)) {
+					if (libros.estaLibro(isbn) == false) {
+						String datosNuevoLibro = "";
+						datosNuevoLibro += isbn + "\r\n" + titulo + "\r\n" + autor + "\r\n" + cantidad;
+						libros.escribeArchivo(datosNuevoLibro);
+						Libro nuevoLibro = new Libro(isbn, titulo, autor, Integer.parseInt(cantidad));
+						libros.agregarNuevoLibro(nuevoLibro);
+						JOptionPane.showMessageDialog(null,
+								"LOS DATOS DEL NUEVO LIBRO HAN INGRESADOS CON EXITO AL SISTEMA!");
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"El libro ingresado ya se encuentra registrado en el sistema");
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "El libro ingresado ya se encuentra registrado en el sistema");
+					JOptionPane.showMessageDialog(null,
+							"Recuerde rellenar todos los campos para registrar un nuevo libro");
 				}
 			}
 		});
