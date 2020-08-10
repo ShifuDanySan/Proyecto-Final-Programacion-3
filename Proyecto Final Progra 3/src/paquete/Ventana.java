@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -326,6 +328,14 @@ public class Ventana {
 		textDniAlumno.setBounds(133, 305, 86, 20);
 		panelPrestamos.add(textDniAlumno);
 		textDniAlumno.setColumns(10);
+		textDniAlumno.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				if ((int) arg0.getKeyChar() < 48 || (int) arg0.getKeyChar() > 57) {
+					arg0.consume();
+				}
+			}
+		});
 
 		btnConfirmarPrestamo = new JButton("Confirmar Prestamo");
 		btnConfirmarPrestamo.setFont(new Font("Tahoma", Font.PLAIN, 13));
