@@ -163,7 +163,6 @@ public class Archivo {
 
 	public void eliminarLibro(String isbn) {
 		// String archivoAUX = "librosAux.txt";
-		int pos;
 		if (estaLibro(isbn) == true) {
 			File archivoAux;
 			PrintWriter escribir;
@@ -178,8 +177,8 @@ public class Archivo {
 					System.out.println("No se encuentra el archivo");
 				}
 			}
-            int i=0;
-            pos=0;
+			int i = 0;
+			int pos = 0;
 			if (archivoAux.exists()) {
 				try {
 					escribir = new PrintWriter(archivoAux);
@@ -189,27 +188,25 @@ public class Archivo {
 						if (e.devolverIsbn().equals(isbn) != true) {
 							datos += e.devolverIsbn() + "\r\n" + e.devolverTitulo() + "\r\n" + e.devolverAutor()
 									+ "\r\n" + e.devolverCantidadDeLibros() + "\r\n";
-							escribir.println(datos);
+							escribir.print(datos);
 							i++;
-						}else {
-							pos=i+1;
+							datos = "";
+						} else {
+							pos = i;
 						}
-						datos = "";
 					}
 					libros.remove(pos);
-					
 					escribir.close();
-
-					File archivo = new File(direccion);// eliminado archivo
-					archivo.delete();
-
-					archivoAux.renameTo(new File("Libros.txt"));// Cambiando nombre
+					File archivo = new File(this.direccion);// eliminado archivo
+					if (archivo.delete()) {
+						JOptionPane.showMessageDialog(null, "Los datos del libro han sido correctamente borrados");
+						archivoAux.renameTo(new File("Libros.txt"));// Cambiando nombre
+					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-
 		} else {
 			JOptionPane.showMessageDialog(null,
 					"El ISBN no corresponde a un Libro previamente registrado en el sistema");

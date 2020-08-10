@@ -42,7 +42,6 @@ public class Ventana {
 	private void initialize() {
 		usuariosPermitidos = new Archivo("Usuarios Permitidos.txt");
 		libros = new Archivo("Libros.txt");
-
 		// guardamos los datos del archivo libros.txt en un ArrayList (uno de los
 		// atributos de la clase Archivo)
 		libros.guardarDatosDeLibros();
@@ -338,9 +337,12 @@ public class Ventana {
 				String apellidoAlumno = textApellidoAlumno.getText();
 				String dniAlumno = textDniAlumno.getText();
 				String fechaRetiro = textFechaRetiro.getText();
-
-				libros.guardarDatosDeLibros();
-
+				textISBN.setText("");
+				textNombreAlumno.setText("");
+				textApellidoAlumno.setText("");
+				textDniAlumno.setText("");
+				textFechaRetiro.setText("");
+				textISBN.requestFocus();
 				if (libros.estaLibro(isbn) == true) {
 					String datosLibros[] = libros.devolverDatosDeLibro(isbn);
 					int cantLibros = Integer.parseInt(datosLibros[2]);
@@ -352,16 +354,14 @@ public class Ventana {
 								+ " " + isbn + " " + datosLibros[0] + " " + datosLibros[1];
 
 						prestamos.escribeArchivo(datosPrestamos);
-						JOptionPane.showMessageDialog(null, "El prestamo sea registrado");
-
-						libros.eliminarLibro("4444");
+						JOptionPane.showMessageDialog(null, "El prestamo ha sido registrado");
 
 					} else {
 						JOptionPane.showMessageDialog(null, "Ya no hay suficientes libros");
 					}
 
 				} else {
-					JOptionPane.showMessageDialog(null, "No se encuentra registrado el libro solicitado");
+					JOptionPane.showMessageDialog(null, "El libro solicitado NO se encuentra registrado");
 				}
 			}
 		});
@@ -536,14 +536,12 @@ public class Ventana {
 		btnEliminar = new JButton("Eliminar libro");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				ISBNIngresado = "";
 				ISBNIngresado += textIsbnEliminar.getText();
 				libros.eliminarLibro(ISBNIngresado);
 				textIsbnEliminar.setText("");
 				textIsbnEliminar.requestFocus();
 				ISBNIngresado = "";
-				JOptionPane.showMessageDialog(null, "Los datos del libro han sido correctamente borrados");
 			}
 		});
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
